@@ -8,6 +8,10 @@ const IcecatProduct = require('../lib/OpenCatalog/product');
 
 const icecatProductJSONFound = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/4948570114344.json'), 'utf8'));
 const icecatProductXMLFound = fs.readFileSync(path.join(__dirname, 'fixtures/4948570114344.xml'), 'utf8');
+const icecatProductWithSeriesJSONFound = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'fixtures/8806088730271.json'), 'utf8')
+);
+const icecatProductWithSeriesXMLFound = fs.readFileSync(path.join(__dirname, 'fixtures/8806088730271.xml'), 'utf8');
 const icecatProductJSONNotFound = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/12345.json'), 'utf8'));
 const icecatProductXMLNotFound = fs.readFileSync(path.join(__dirname, 'fixtures/12345.xml'), 'utf8');
 const requestUrl = 'https://user:password@data.icecat.biz/response';
@@ -122,6 +126,19 @@ test('Found - Product values - Supplier', (t) => {
 test('Found - Product values - Category', (t) => {
   const testProduct = new IcecatProduct(icecatProductJSONFound, icecatProductXMLFound, requestUrl);
   t.is(testProduct.getCategory(), 'public displays');
+  t.end();
+});
+
+test('Found - Product values - Family with Series', async (t) => {
+  const testProduct = new IcecatProduct(icecatProductWithSeriesJSONFound, icecatProductWithSeriesXMLFound, requestUrl);
+  t.deepEqual(testProduct.getFamily(), {
+    id: '1057505',
+    name: 'Galaxy',
+    series: {
+      id: '2876473',
+      name: 'S8'
+    }
+  });
   t.end();
 });
 
